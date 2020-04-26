@@ -3,6 +3,7 @@
 #include <curses.h>
 #include <stdlib.h>
 #include <math.h>
+#include <fstream>
 using namespace std;
 /*          __,__
    .--.  .-"     "-.  .--.
@@ -22,12 +23,15 @@ using int32 = int;
 int angle;
 float x,y,speed;
 string cheese;
+std::ifstream bruh;
 int main()
 {
+    bruh.open("bruh.txt");
+    asciimg image = loadImg(bruh);
     angle = 0;
     speed = 0;
-    x=7;
-    y=7;
+    x=7.0;
+    y=7.0;
     WINDOW *scr = initscr();
     WINDOW *flightwin = newwin(32,64,0,0);
     WINDOW *navwin = newwin(16,16,16,65);

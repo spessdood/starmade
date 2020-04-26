@@ -2,7 +2,7 @@
 #include "UI.h"
 #include <curses.h>
 #include <math.h>
-#define COLORCHAR 'C'
+#include <string>
 /*
 ACS_CKBOARD:1:(char)219
 ACS_BOARD:.75:(char)178
@@ -23,4 +23,27 @@ void bar(WINDOW *win,int x,int y,int mx,int min,int max,float val){
   for(float i = val+unit;i<max-min;i+=unit){
     if(i<val)waddch(win,' ');
   }
+}
+
+
+asciimg loadImg(std::ifstream& input){
+  asciimg out;
+  int color = 0;
+  std::string line;
+  int ct = 0;
+  while(getline(input,line)){
+    for(int i =0;i<line.length();i++){
+      if(ct%16)break;
+      if(line.at(i)==COLORCHAR){
+        color = (int)line.at(i)-48;
+        i++;
+      }
+      else{
+        out.img[ct/16][ct%16] = line.at(i);
+      }
+      out.colors[ct/16][ct%16] = color;
+      ct++;
+    }
+  }
+  return out;
 }

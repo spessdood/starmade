@@ -4,6 +4,8 @@
 #include <curses.h>
 #include <iostream>
 #include <fstream>
+
+#define COLORCHAR 'C'
 void bar(WINDOW *win,int x,int y,int mx,int max,int min,float val);
 
 struct asciimg{
@@ -11,7 +13,7 @@ struct asciimg{
   char img[16][16];
 };
 
-asciimg loadImg(std::ifstream input);
+  asciimg loadImg(std::ifstream&);
 
 void wprintmg(WINDOW *win,int x,int y,asciimg img);
 
