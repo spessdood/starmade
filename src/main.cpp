@@ -1,4 +1,3 @@
-#include "UI.h"
 #include <iostream>
 #include <curses.h>
 #include <stdlib.h>
@@ -91,29 +90,24 @@ void saveFile(WINDOW *win){
   string name;
   int coloro = 0;
   ofstream out;
-  short *fore;
-  short *bg;
-  short *foro;
-  cout << "yo what to name file dood:";
+  cout << "name file dood:";
   cin>>name;
   out.open(name);
   for(int i =0;i< 16;i++){
     for(int w =0;w<16;w++){
       char ch = mvwinch(win,i+1,w+1) & A_CHARTEXT;
-      /*short coloring = winch(win) & A_COLOR;
-      cout<<(coloring);
-      if(coloring!=COLOR_PAIR(coloro)){
+      short coloring = winch(win) & A_COLOR;
+      cout<<coloring<<'B';
+    if(coloring!=COLOR_PAIR(coloro)){
         out<<'C';
         for(int z = 0;z<4;z++){
-          pair_content(coloring,fore,bg);
-          pair_content(COLOR_PAIR(z),foro,bg);
-          if(fore == foro){
+          if(COLOR_PAIR(z)==coloring){
             coloro = z;
             out<<(char)(coloro+48);
             break;
           }
         }
-      }*/ 
+      }
       out<< ch;
     }
     out << "\n";
