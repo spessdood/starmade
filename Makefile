@@ -1,6 +1,6 @@
 CMP = g++
 SRC = ./src
-EXEC = stars
+EXEC = image
 FLAGS = -lncursesw
 INCLUDE = ./include
 OBJ = ./obj

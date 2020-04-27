@@ -3,6 +3,7 @@
 #include <curses.h>
 #include <stdlib.h>
 #include <math.h>
+#include <string>
 #include <fstream>
 using namespace std;
 /*          __,__
@@ -17,78 +18,105 @@ using namespace std;
         '._ '-=-' _.'
            '~---~'
 */
-
+void saveFile(WINDOW *win);
 
 using int32 = int;
-int angle;
-float x,y,speed;
-string cheese;
-std::ifstream bruh;
+int color = 0;
+int x=0;
+int y=0;
+bool bruh = false;
 int main()
 {
-    bruh.open("bruh.txt");
-    asciimg image = loadImg(bruh);
-    angle = 0;
-    speed = 0;
-    x=7.0;
-    y=7.0;
-    WINDOW *scr = initscr();
-    WINDOW *flightwin = newwin(32,64,0,0);
-    WINDOW *navwin = newwin(16,16,16,65);
-    wbkgdset(navwin,ACS_PLUS );
-    keypad(scr, TRUE);
-    cbreak();
-    noecho();
-    while (true){
+
+  WINDOW *stdscr = initscr();
+  noecho();
+  cbreak();
+  WINDOW *win = newwin(18,18,0,0);
+  start_color();
+  init_pair(0,COLOR_WHITE,COLOR_BLACK);
+  init_pair(1, COLOR_YELLOW, COLOR_BLACK);
+  init_pair(2, COLOR_BLUE, COLOR_BLACK);
+  init_pair(3, COLOR_GREEN, COLOR_BLACK);
+  init_pair(4, COLOR_RED, COLOR_BLACK);
+  keypad(stdscr,true);
+  if(has_colors()==FALSE){
+    endwin();
+    exit(1);
+  }
+    while(true){
+      bruh = false;
+      wattroff(win,COLOR_PAIR(color));
       int32 in = getch();
-      wclear(flightwin);
-      wclear(navwin);
-      clear();
-      switch(in){
-        case KEY_LEFT:
-          angle+=20;
-          break;
-        case KEY_RIGHT:
-          angle-=20;
+      switch (in) {
+        case KEY_UP:
+          y--;
           break;
         case KEY_DOWN:
-          speed-=0.25;
+          y++;
           break;
-        case KEY_UP:
-          speed+=0.25;
+        case KEY_LEFT:
+          x--;
           break;
-        default :
+        case KEY_RIGHT:
+          x++;
           break;
-
+        case '>':
+        color++;
+        if(color>4)color = 0;
+        break;
+        case '<':
+          color--;
+          if(color<0)color = 4;
+          break;
+        case '`':
+          saveFile(win);
+          break;
+        default:
+         bruh = true;
       }
-      wbkgdset(navwin,ACS_PLUS );
-      wbkgd(navwin,ACS_PLUS );
-      mvwaddch(navwin,y/32+1,x/32+1,'O');
-      box(flightwin,0,0);
-      box(navwin,0,0);
-      wmove(flightwin,16,32);
-      waddch(flightwin,'X');
-      wmove(flightwin,sin(angle/57.32)*5+16,cos(angle/57.32)*5+32);
-      waddch(flightwin,'+');
-      move(4,70);
-      printw("angel: %d",round(speed));
-      move(5,70);
-      printw("sped:[");
-      bar(scr,76,5,10,0,5,speed);
-      mvaddch(5,81,']');
-      move(6,70);
-      printw("EX: %d",round(x));
-      move(7,70);
-      printw("WHY: %d",round(y));
+      wattron(win,COLOR_PAIR(color));
+      if(bruh)mvwaddch(win,y,x,in);
+      box(win,0,0);
+      wmove(win,0,0);
+      waddch(win,(char)(color+48));
+      wmove(win,y,x);
       refresh();
-      wrefresh(flightwin);
-      wrefresh(navwin);
-      x+= cos(angle/57.32)*speed;
-      y+= sin(angle/57.32)*speed;
-      if(x<1){x=1;}
-      if(x>447){x=447;}
-      if(y<1){y=1;}
-      if(y>447){y=447;}
-      }
+      wrefresh(win);
+    }
     return 0;
+}
+
+
+void saveFile(WINDOW *win){
+  string name;
+  int coloro = 0;
+  ofstream out;
+  short *fore;
+  short *bg;
+  short *foro;
+  cout << "yo what to name file dood:";
+  cin>>name;
+  out.open(name);
+  for(int i =0;i< 16;i++){
+    for(int w =0;w<16;w++){
+      char ch = mvwinch(win,i+1,w+1) & A_CHARTEXT;
+      /*short coloring = winch(win) & A_COLOR;
+      cout<<(coloring);
+      if(coloring!=COLOR_PAIR(coloro)){
+        out<<'C';
+        for(int z = 0;z<4;z++){
+          pair_content(coloring,fore,bg);
+          pair_content(COLOR_PAIR(z),foro,bg);
+          if(fore == foro){
+            coloro = z;
+            out<<(char)(coloro+48);
+            break;
+          }
+        }
+      }*/ 
+      out<< ch;
+    }
+    out << "\n";
+  }
+
 }
