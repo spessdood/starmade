@@ -26,8 +26,9 @@ string cheese;
 std::ifstream bruh;
 int main()
 {
-    bruh.open("bruh.txt");
+    bruh.open("planit");
     asciimg image = loadImg(bruh);
+    bruh.close();
     angle = 0;
     speed = 0;
     x=7.0;
@@ -35,6 +36,12 @@ int main()
     WINDOW *scr = initscr();
     WINDOW *flightwin = newwin(32,64,0,0);
     WINDOW *navwin = newwin(16,16,16,65);
+    start_color();
+    init_pair(0,COLOR_WHITE,COLOR_BLACK);
+    init_pair(1, COLOR_YELLOW, COLOR_BLACK);
+    init_pair(2, COLOR_BLUE, COLOR_BLACK);
+    init_pair(3, COLOR_GREEN, COLOR_BLACK);
+    init_pair(4, COLOR_RED, COLOR_BLACK);
     wbkgdset(navwin,ACS_PLUS );
     keypad(scr, TRUE);
     cbreak();
@@ -64,8 +71,6 @@ int main()
       wbkgdset(navwin,ACS_PLUS );
       wbkgd(navwin,ACS_PLUS );
       mvwaddch(navwin,y/32+1,x/32+1,'O');
-      box(flightwin,0,0);
-      box(navwin,0,0);
       wmove(flightwin,16,32);
       waddch(flightwin,'X');
       wmove(flightwin,sin(angle/57.32)*5+16,cos(angle/57.32)*5+32);
@@ -80,6 +85,9 @@ int main()
       printw("EX: %d",round(x));
       move(7,70);
       printw("WHY: %d",round(y));
+      wprintmg(scr,100,1,image);
+      box(flightwin,0,0);
+      box(navwin,0,0);
       refresh();
       wrefresh(flightwin);
       wrefresh(navwin);
@@ -89,6 +97,7 @@ int main()
       if(x>447){x=447;}
       if(y<1){y=1;}
       if(y>447){y=447;}
+
       }
     return 0;
 }

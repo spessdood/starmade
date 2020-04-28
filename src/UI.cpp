@@ -3,6 +3,8 @@
 #include <curses.h>
 #include <math.h>
 #include <string>
+#include <iostream>
+#include <array>
 /*
 ACS_CKBOARD:1:(char)219
 ACS_BOARD:.75:(char)178
@@ -31,19 +33,34 @@ asciimg loadImg(std::ifstream& input){
   int color = 0;
   std::string line;
   int ct = 0;
-  while(getline(input,line)){
+  for(int ctlin =0;ctlin<16;ctlin++){
+    ct =0;
     for(int i =0;i<line.length();i++){
-      if(ct%16)break;
       if(line.at(i)==COLORCHAR){
-        color = (int)line.at(i)-48;
         i++;
+        color = (int)line.at(i)-48;
       }
       else{
-        out.img[ct/16][ct%16] = line.at(i);
+        out.img[ctlin][ct] = line.at(i);
+        ct++;
       }
-      out.colors[ct/16][ct%16] = color;
-      ct++;
+      out.colors[ctlin][ct] = color;
+      if(ct>16)break;
     }
+    ctlin++;
+    if(ctlin>16)break;
   }
   return out;
+}
+
+void wprintmg(WINDOW *win,int x,int y,asciimg image){
+  for(int i =0;i<sizeof(image.img);i++){
+    for(int w= 0;w<sizeof(image.img[i]);w++){
+      wattron(win,COLOR_PAIR(image.colors[i][w]));
+      mvwaddch(win,i+y,w+x,image.img[i][w]);
+      wattroff(win,COLOR_PAIR(image.colors[i][w]));
+    }
+
+  }
+
 }

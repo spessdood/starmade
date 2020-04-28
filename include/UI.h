@@ -13,7 +13,7 @@ struct asciimg{
   char img[16][16];
 };
 
-  asciimg loadImg(std::ifstream&);
+asciimg loadImg(std::ifstream&);
 
 void wprintmg(WINDOW *win,int x,int y,asciimg img);
 
